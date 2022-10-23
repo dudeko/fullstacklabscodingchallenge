@@ -77,15 +77,11 @@ public class MonsterServiceImpl implements MonsterService {
             settings.setProcessor(rowProcessor);
             CsvParser parser = new CsvParser(settings);
             parser.parse(inputReader);
-            List<MonsterDTO> monsters = rowProcessor.getBeans();
-            monsters.stream().forEach(m->validateMonster(m));
+            List<MonsterDTO> monsters = rowProcessor.getBeans();            
             monsters.forEach(m -> create(m));
         } catch (IOException ex) {
             throw new UnprocessableFileException(ex.getMessage());
         }
     }
-    
-    private void validateMonster(MonsterDTO monster) {
-        //TODO: Implements throws UnprocessableFileException in case of validation errors
-    }
+
 }

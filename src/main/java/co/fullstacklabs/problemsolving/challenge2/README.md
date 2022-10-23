@@ -22,7 +22,7 @@ Example 2:
 Example 1:
 - Dice 1: 3
 - Dice 2: 3
-- Dice 2: 3
+- Dice 3: 3
 ```
 
 Based on the examples above, you should return the value that represents the correct number value.

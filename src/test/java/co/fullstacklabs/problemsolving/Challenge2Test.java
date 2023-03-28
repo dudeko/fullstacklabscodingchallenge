@@ -34,13 +34,13 @@ public class Challenge2Test {
 
     @Test
     public void testCase4() {
-        int value = Challenge2.diceFacesCalculator(1, 2, 1);
+        int value = Challenge2.diceFacesCalculator(1, 3, 1);
         assertEquals(2, value);
     }
 
     @Test
     public void testCase5() {
-        int value = Challenge2.diceFacesCalculator(3, 6, 3);
+        int value = Challenge2.diceFacesCalculator(3, 5, 3);
         assertEquals(6, value);
     }
 

@@ -17,7 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ContextConfiguration(classes = ApplicationConfig.class)
 public class ApplicationConfigTest {
     @Autowired
-    ApplicationConfig applicationConfig;
+    transient ApplicationConfig applicationConfig;
     @Test
     void modelMapperTest() {
         ModelMapper mapper = applicationConfig.modelMapper();

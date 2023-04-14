@@ -1,10 +1,18 @@
 package co.fullstacklabs.battlemonsters.challenge.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 
 import java.util.List;
+import java.util.Optional;
 
+import co.fullstacklabs.battlemonsters.challenge.dto.MonsterDTO;
+import co.fullstacklabs.battlemonsters.challenge.exceptions.BattleException;
+import co.fullstacklabs.battlemonsters.challenge.exceptions.ResourceNotFoundException;
+import co.fullstacklabs.battlemonsters.challenge.model.Monster;
+import co.fullstacklabs.battlemonsters.challenge.testbuilders.MonsterTestBuilder;
 import org.assertj.core.util.Lists;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,17 +37,19 @@ import co.fullstacklabs.battlemonsters.challenge.testbuilders.BattleTestBuilder;
 public class BattleServiceTest {
     
     @InjectMocks
-    public BattleServiceImpl battleService;
+    public transient BattleServiceImpl battleService;
 
     @Mock
-    public BattleRepository battleRepository;
+    public transient BattleRepository battleRepository;
+    @Mock
+    public transient MonsterService monsterService;
 
     @Mock
-    private ModelMapper mapper;
+    private transient ModelMapper mapper;
 
     /**** Delete */
     @Mock
-    public MonsterRepository monsterRepository;
+    public transient MonsterRepository monsterRepository;
 
     @Test
     public void testGetAll() {
@@ -59,38 +69,95 @@ public class BattleServiceTest {
     
      @Test
      void shouldFailBattleWithUndefinedMonster() {
-        //TODO: Implement        
-        assertEquals(1, 1);
+        Assertions.assertThrows(BattleException.class, () -> battleService.start(BattleDTO.builder().build(), null, null));
     }
 
     @Test
     void shouldFailBattleWithInexistentMonster() {
-        //TODO: Implement
-        assertEquals(1, 1);
+        Mockito.when(monsterService.findById(1)).thenThrow(BattleException.class);
+        Assertions.assertThrows(BattleException.class, () -> battleService.start(any(BattleDTO.class),1, 2));
     }
 
     @Test
     void shouldInsertBattleWithMonsterAWinning() {
-        //TODO: Implement
-      assertEquals(1, 1);    
+        int monster1Id = 1;
+        int monster2Id = 2;
+        MonsterDTO monster1 = MonsterDTO.builder()
+                .id(monster1Id)
+                .name("Frankie")
+                .hp(100)
+                .attack(8)
+                .defense(2)
+                .speed(5)
+                .build();
+        MonsterDTO monster2 = MonsterDTO.builder()
+                .id(monster2Id)
+                .name("Johnny")
+                .hp(15)
+                .attack(4)
+                .defense(3)
+                .speed(2)
+                .build();
+
+        BattleDTO battleDTO = BattleDTO.builder().build();
+
+        Mockito.when(monsterService.findById(monster1Id)).thenReturn(monster1);
+        Mockito.when(monsterService.findById(monster2Id)).thenReturn(monster2);
+        Mockito.when(battleRepository.findById(any())).thenReturn(Optional.of(new Battle()));
+
+        battleService.start(battleDTO, monster1Id, monster2Id);
+
+        Assertions.assertEquals(battleDTO.getWinner(), monster1);
     }
 
     @Test
     void shouldInsertBattleWithMonsterBWinning() {
-        //TODO: Implement
-          assertEquals(1, 1);    
+        int monster1Id = 1;
+        int monster2Id = 2;
+        MonsterDTO monster1 = MonsterDTO.builder()
+                .id(monster1Id)
+                .name("Frankie")
+                .hp(10)
+                .attack(1)
+                .defense(1)
+                .speed(1)
+                .build();
+        MonsterDTO monster2 = MonsterDTO.builder()
+                .id(monster2Id)
+                .name("Johnny")
+                .hp(100)
+                .attack(2)
+                .defense(50)
+                .speed(50)
+                .build();
+
+        BattleDTO battleDTO = BattleDTO.builder().build();
+
+        Mockito.when(monsterService.findById(monster1Id)).thenReturn(monster1);
+        Mockito.when(monsterService.findById(monster2Id)).thenReturn(monster2);
+        Mockito.when(battleRepository.findById(any())).thenReturn(Optional.of(new Battle()));
+
+        battleService.start(battleDTO, monster1Id, monster2Id);
+
+        Assertions.assertEquals(battleDTO.getWinner(), monster2);
     }
 
     @Test
     void shouldDeleteBattleSucessfully() {
-        //TODO: Implement        
-         assertEquals(1, 1);    
+        int id = 2;
+        Battle battle1 = BattleTestBuilder.builder().id(id).build();
+        Mockito.when(battleRepository.findById(id)).thenReturn(Optional.of(battle1));
+        Mockito.doNothing().when(battleRepository).delete(battle1);
+
+        battleService.delete(id);
+
+        Mockito.verify(battleRepository).findById(id);
+        Mockito.verify(battleRepository).delete(battle1);
     }
 
     @Test
     void shouldFailDeletingInexistentBattle() {
-        //TODO: Implement
-         assertEquals(1, 1);    
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> battleService.delete(123));
     }
 
 

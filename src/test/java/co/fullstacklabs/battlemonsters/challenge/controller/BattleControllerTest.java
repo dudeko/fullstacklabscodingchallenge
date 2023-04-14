@@ -5,8 +5,19 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import co.fullstacklabs.battlemonsters.challenge.dto.BattleDTO;
+import co.fullstacklabs.battlemonsters.challenge.dto.MonsterDTO;
+import co.fullstacklabs.battlemonsters.challenge.model.Battle;
+import co.fullstacklabs.battlemonsters.challenge.model.Monster;
+import co.fullstacklabs.battlemonsters.challenge.repository.BattleRepository;
+import co.fullstacklabs.battlemonsters.challenge.repository.MonsterRepository;
+import co.fullstacklabs.battlemonsters.challenge.service.BattleService;
+import co.fullstacklabs.battlemonsters.challenge.service.MonsterService;
+import co.fullstacklabs.battlemonsters.challenge.testbuilders.BattleTestBuilder;
 import org.hamcrest.core.Is;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,8 +39,30 @@ public class BattleControllerTest {
     private static final String BATTLE_PATH = "/battle";
 
     @Autowired
-    private MockMvc mockMvc;
-    
+    transient BattleService battleService;
+    @Autowired
+    transient MonsterService monsterService;
+
+    @Autowired
+    private transient MockMvc mockMvc;
+
+//    @BeforeAll
+//    void setup() {
+//        MonsterDTO monsterA = MonsterDTO.builder().name("Rob").attack(1).defense(1).hp(1)
+//                .speed(1)
+//                .imageUrl("")
+//                .build();
+//        MonsterDTO monsterB = MonsterDTO.builder().name("Matt").attack(1).defense(1).hp(1)
+//                .speed(1)
+//                .imageUrl("")
+//                .build();
+//        BattleDTO battle = BattleDTO.builder()
+//                .monsterA(monsterService.create(monsterA))
+//                .monsterB(monsterService.create(monsterB))
+//                .build();
+//        battle.setWinner(battle.getMonsterA());
+//        battleService.create(battle);
+//    }
 
     @Test
     void shouldFetchAllBattles() throws Exception {

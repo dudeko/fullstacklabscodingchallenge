@@ -9,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import co.fullstacklabs.battlemonsters.challenge.exceptions.BattleException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

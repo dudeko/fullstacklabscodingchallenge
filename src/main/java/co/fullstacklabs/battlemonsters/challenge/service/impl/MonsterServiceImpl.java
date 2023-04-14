@@ -1,12 +1,18 @@
 package co.fullstacklabs.battlemonsters.challenge.service.impl;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.univocity.parsers.common.DataProcessingException;
+import com.univocity.parsers.common.record.Record;
+import javassist.NotFoundException;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.ValidationException;
+import org.modelmapper.internal.util.Lists;
 import org.springframework.stereotype.Service;
 
 import com.univocity.parsers.common.processor.BeanListProcessor;
@@ -28,8 +34,8 @@ import co.fullstacklabs.battlemonsters.challenge.service.MonsterService;
 @Service
 public class MonsterServiceImpl implements MonsterService {
 
-    private MonsterRepository monsterRepository;
-    private ModelMapper modelMapper;
+    private transient MonsterRepository monsterRepository;
+    private transient ModelMapper modelMapper;
 
     public MonsterServiceImpl(MonsterRepository monsterRepository, ModelMapper modelMapper) {
         this.monsterRepository = monsterRepository;
@@ -45,28 +51,34 @@ public class MonsterServiceImpl implements MonsterService {
 
     private Monster findMonsterById(int id) {
          return monsterRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Monster not found"));
+                 .orElseThrow(() -> new ResourceNotFoundException("Monster not found"));
     }
 
     @Override
-    public MonsterDTO findById(int id) {
+    public MonsterDTO findById(int id) throws ResourceNotFoundException {
         Monster monster = findMonsterById(id);
         return modelMapper.map(monster, MonsterDTO.class);
     }
 
     @Override
     public MonsterDTO update(MonsterDTO monsterDTO) {
-        Monster monster = findMonsterById(monsterDTO.getId());
-        monster = modelMapper.map(monsterDTO, Monster.class);        
+        findMonsterById(monsterDTO.getId());
+        Monster monster = modelMapper.map(monsterDTO, Monster.class);
         monsterRepository.save(monster);
         return modelMapper.map(monster, MonsterDTO.class);
-
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(Integer id) throws ResourceNotFoundException {
         Monster monster = findMonsterById(id);
         monsterRepository.delete(monster);
+    }
+
+    @Override
+    public List<MonsterDTO> getAll() {
+         return monsterRepository.findAll().stream()
+                 .map(monster -> modelMapper.map(monster, MonsterDTO.class))
+                 .collect(Collectors.toList());
     }
 
     public void importFromInputStream(InputStream inputStream) {
@@ -77,9 +89,12 @@ public class MonsterServiceImpl implements MonsterService {
             settings.setProcessor(rowProcessor);
             CsvParser parser = new CsvParser(settings);
             parser.parse(inputReader);
-            List<MonsterDTO> monsters = rowProcessor.getBeans();            
-            monsters.forEach(m -> create(m));
-        } catch (IOException ex) {
+
+            MonsterDTO.validateCsvHeaders(rowProcessor.getHeaders());
+
+            List<MonsterDTO> monsters = rowProcessor.getBeans();
+            monsters.forEach(this::create);
+        } catch (IOException | DataProcessingException | ValidationException ex) {
             throw new UnprocessableFileException(ex.getMessage());
         }
     }

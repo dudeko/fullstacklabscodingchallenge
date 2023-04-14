@@ -23,7 +23,7 @@ public class BattleTestBuilder {
 
     public static class BattleBuilder {
         private Integer id = 1;
-        private Monster monsterA = MonsterTestBuilder.builder().id(1).build();
+        private transient Monster monsterA = MonsterTestBuilder.builder().id(1).build();
         private Monster monsterB = MonsterTestBuilder.builder().id(2).build();
         private Monster monsterWinner = monsterA;        
 

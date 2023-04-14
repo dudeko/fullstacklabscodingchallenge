@@ -32,13 +32,14 @@ import co.fullstacklabs.battlemonsters.challenge.dto.MonsterDTO;
 @Import(ApplicationConfig.class)
 public class MonsterControllerTest {
     private static final String MONSTER_PATH = "/monster";
+    public static final String ID_ENDPOINT = "/{id}";
 
     @Autowired
-    private MockMvc mockMvc;
+    private transient MockMvc mockMvc;
     @Autowired
-    private ObjectMapper objectMapper;
+    private transient ObjectMapper objectMapper;
 
-    //@Test    
+    @Test
     void shouldFetchAllMonsters() throws Exception {
         this.mockMvc.perform(get(MONSTER_PATH)).andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id", Is.is(1)))
@@ -53,14 +54,14 @@ public class MonsterControllerTest {
     @Test
     void shouldGetMosterSuccessfully() throws Exception {
         long id = 1l;
-        this.mockMvc.perform(get(MONSTER_PATH + "/{id}", id)).andExpect(status().isOk())
+        this.mockMvc.perform(get(MONSTER_PATH + ID_ENDPOINT, id)).andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", Is.is("Monster 1")));
     }
 
     @Test
     void shoulGetMonsterNotExists() throws Exception {
         long id = 3l;
-        this.mockMvc.perform(get(MONSTER_PATH + "/{id}", id))
+        this.mockMvc.perform(get(MONSTER_PATH + ID_ENDPOINT, id))
                 .andExpect(status().isNotFound());
     }
     
@@ -76,7 +77,7 @@ public class MonsterControllerTest {
                 .content(objectMapper.writeValueAsString(newMonster)));
                 
 
-        this.mockMvc.perform(delete(MONSTER_PATH + "/{id}", id))
+        this.mockMvc.perform(delete(MONSTER_PATH + ID_ENDPOINT, id))
             .andExpect(status().isOk());                
     }
 
@@ -84,7 +85,7 @@ public class MonsterControllerTest {
     void shouldDeleteMonsterNotFound() throws Exception {
         int id = 5;
 
-        this.mockMvc.perform(delete(MONSTER_PATH + "/{id}", id))
+        this.mockMvc.perform(delete(MONSTER_PATH + ID_ENDPOINT, id))
                 .andExpect(status().isNotFound());
     }
     

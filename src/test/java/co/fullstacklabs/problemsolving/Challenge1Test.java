@@ -19,17 +19,21 @@ import co.fullstacklabs.problemsolving.challenge1.Challenge1;
  */
 public class Challenge1Test {
 
+    public static final String POSITIVES = "positives";
+    public static final String NEGATIVE = "negative";
+    public static final String ZEROS = "zeros";
+
     @Test
     public void testCase1() {
         Map<String, Float> values = Challenge1
                 .numbersFractionCalculator(new Integer[] { -4, 3, -9, 0, 4, 1 });
         Map<String, Float> expectedValues = new HashMap<>();
-        expectedValues.put("positives", 0.5f);
-        expectedValues.put("negative", 0.333333f);
-        expectedValues.put("zeros", 0.166667f);
-        assertEquals(expectedValues.get("positives"), round(values.get("positives"), 6));
-        assertEquals(expectedValues.get("negative"), round(values.get("negative"), 6));
-        assertEquals(expectedValues.get("zeros"), round(values.get("zeros"), 6));
+        expectedValues.put(POSITIVES, 0.5f);
+        expectedValues.put(NEGATIVE, 0.333333f);
+        expectedValues.put(ZEROS, 0.166667f);
+        assertEquals(expectedValues.get(POSITIVES), round(values.get(POSITIVES), 6));
+        assertEquals(expectedValues.get(NEGATIVE), round(values.get(NEGATIVE), 6));
+        assertEquals(expectedValues.get(ZEROS), round(values.get(ZEROS), 6));
 
     }
     
@@ -38,12 +42,12 @@ public class Challenge1Test {
         Map<String, Float> values = Challenge1
                 .numbersFractionCalculator(new Integer[] { -10, -9, -8, -7, -6, -5, -4, -3, -2, -1, });
         Map<String, Float> expectedValues = new HashMap<>();
-        expectedValues.put("positives", 0.0f);
-        expectedValues.put("negative", 1.0f);
-        expectedValues.put("zeros", 0.0f);
-        assertEquals(expectedValues.get("positives"), round(values.get("positives"), 6));
-        assertEquals(expectedValues.get("negative"), round(values.get("negative"), 6));
-        assertEquals(expectedValues.get("zeros"), round(values.get("zeros"), 6));
+        expectedValues.put(POSITIVES, 0.0f);
+        expectedValues.put(NEGATIVE, 1.0f);
+        expectedValues.put(ZEROS, 0.0f);
+        assertEquals(expectedValues.get(POSITIVES), round(values.get(POSITIVES), 6));
+        assertEquals(expectedValues.get(NEGATIVE), round(values.get(NEGATIVE), 6));
+        assertEquals(expectedValues.get(ZEROS), round(values.get(ZEROS), 6));
 
     }
     
@@ -52,12 +56,12 @@ public class Challenge1Test {
         Map<String, Float> values = Challenge1
                 .numbersFractionCalculator(new Integer[] {10, 9, 8, 7, 6, 5, 4, 3, 2, 1});
         Map<String, Float> expectedValues = new HashMap<>();
-        expectedValues.put("positives", 1.0f);
-        expectedValues.put("negative", 0.0f);
-        expectedValues.put("zeros", 0.0f);
-        assertEquals(expectedValues.get("positives"), round(values.get("positives"), 6));
-        assertEquals(expectedValues.get("negative"), round(values.get("negative"), 6));
-        assertEquals(expectedValues.get("zeros"), round(values.get("zeros"), 6));
+        expectedValues.put(POSITIVES, 1.0f);
+        expectedValues.put(NEGATIVE, 0.0f);
+        expectedValues.put(ZEROS, 0.0f);
+        assertEquals(expectedValues.get(POSITIVES), round(values.get(POSITIVES), 6));
+        assertEquals(expectedValues.get(NEGATIVE), round(values.get(NEGATIVE), 6));
+        assertEquals(expectedValues.get(ZEROS), round(values.get(ZEROS), 6));
         
     }
 
@@ -66,12 +70,12 @@ public class Challenge1Test {
         Map<String, Float> values = Challenge1
                 .numbersFractionCalculator(new Integer[] { 4, -1, 0 });
         Map<String, Float> expectedValues = new HashMap<>();
-        expectedValues.put("positives", 0.333333f);
-        expectedValues.put("negative", 0.333333f);
-        expectedValues.put("zeros", 0.333333f);
-        assertEquals(expectedValues.get("positives"), round(values.get("positives"), 6));
-        assertEquals(expectedValues.get("negative"), round(values.get("negative"), 6));
-        assertEquals(expectedValues.get("zeros"), round(values.get("zeros"), 6));
+        expectedValues.put(POSITIVES, 0.333333f);
+        expectedValues.put(NEGATIVE, 0.333333f);
+        expectedValues.put(ZEROS, 0.333333f);
+        assertEquals(expectedValues.get(POSITIVES), round(values.get(POSITIVES), 6));
+        assertEquals(expectedValues.get(NEGATIVE), round(values.get(NEGATIVE), 6));
+        assertEquals(expectedValues.get(ZEROS), round(values.get(ZEROS), 6));
 
     }
     
@@ -88,12 +92,12 @@ public class Challenge1Test {
                     -100, -100, 0, 0, 100, 0, -100, 100, 100,
                 });
         Map<String, Float> expectedValues = new HashMap<>();
-        expectedValues.put("positives", 0.34f);
-        expectedValues.put("negative", 0.38f);
-        expectedValues.put("zeros", 0.28f);
-        assertEquals(expectedValues.get("positives"), round(values.get("positives"), 6));
-        assertEquals(expectedValues.get("negative"), round(values.get("negative"), 6));
-        assertEquals(expectedValues.get("zeros"), round(values.get("zeros"), 6));
+        expectedValues.put(POSITIVES, 0.34f);
+        expectedValues.put(NEGATIVE, 0.38f);
+        expectedValues.put(ZEROS, 0.28f);
+        assertEquals(expectedValues.get(POSITIVES), round(values.get(POSITIVES), 6));
+        assertEquals(expectedValues.get(NEGATIVE), round(values.get(NEGATIVE), 6));
+        assertEquals(expectedValues.get(ZEROS), round(values.get(ZEROS), 6));
         
     }
 
@@ -109,12 +113,12 @@ public class Challenge1Test {
                         38, -73, 79, 0, -2, 90, 80, 74, -74, -85, -48, 31, 0, -80,
                 });
         Map<String, Float> expectedValues = new HashMap<>();
-        expectedValues.put("positives", 0.44f);
-        expectedValues.put("negative", 0.45f);
-        expectedValues.put("zeros", 0.11f);
-        assertEquals(expectedValues.get("positives"), round(values.get("positives"), 6));
-        assertEquals(expectedValues.get("negative"), round(values.get("negative"), 6));
-        assertEquals(expectedValues.get("zeros"), round(values.get("zeros"), 6));
+        expectedValues.put(POSITIVES, 0.44f);
+        expectedValues.put(NEGATIVE, 0.45f);
+        expectedValues.put(ZEROS, 0.11f);
+        assertEquals(expectedValues.get(POSITIVES), round(values.get(POSITIVES), 6));
+        assertEquals(expectedValues.get(NEGATIVE), round(values.get(NEGATIVE), 6));
+        assertEquals(expectedValues.get(ZEROS), round(values.get(ZEROS), 6));
 
     }
     
@@ -130,12 +134,12 @@ public class Challenge1Test {
                         -18, -4, 0, -73, -46, -63, -78, -87,
                 });
         Map<String, Float> expectedValues = new HashMap<>();
-        expectedValues.put("positives", 0.0f);
-        expectedValues.put("negative", 0.833333f);
-        expectedValues.put("zeros", 0.166667f);
-        assertEquals(expectedValues.get("positives"), round(values.get("positives"), 6));
-        assertEquals(expectedValues.get("negative"), round(values.get("negative"), 6));
-        assertEquals(expectedValues.get("zeros"), round(values.get("zeros"), 6));
+        expectedValues.put(POSITIVES, 0.0f);
+        expectedValues.put(NEGATIVE, 0.833333f);
+        expectedValues.put(ZEROS, 0.166667f);
+        assertEquals(expectedValues.get(POSITIVES), round(values.get(POSITIVES), 6));
+        assertEquals(expectedValues.get(NEGATIVE), round(values.get(NEGATIVE), 6));
+        assertEquals(expectedValues.get(ZEROS), round(values.get(ZEROS), 6));
 
     }
     
@@ -151,12 +155,12 @@ public class Challenge1Test {
                         61, -86, 0, 24, -95, 0, -54,
                 });
         Map<String, Float> expectedValues = new HashMap<>();
-        expectedValues.put("positives", 0.3f);
-        expectedValues.put("negative", 0.36f);
-        expectedValues.put("zeros", 0.34f);
-        assertEquals(expectedValues.get("positives"), round(values.get("positives"), 6));
-        assertEquals(expectedValues.get("negative"), round(values.get("negative"), 6));
-        assertEquals(expectedValues.get("zeros"), round(values.get("zeros"), 6));
+        expectedValues.put(POSITIVES, 0.3f);
+        expectedValues.put(NEGATIVE, 0.36f);
+        expectedValues.put(ZEROS, 0.34f);
+        assertEquals(expectedValues.get(POSITIVES), round(values.get(POSITIVES), 6));
+        assertEquals(expectedValues.get(NEGATIVE), round(values.get(NEGATIVE), 6));
+        assertEquals(expectedValues.get(ZEROS), round(values.get(ZEROS), 6));
 
     }
     
@@ -171,12 +175,12 @@ public class Challenge1Test {
                         -18, -82,
                 });
         Map<String, Float> expectedValues = new HashMap<>();
-        expectedValues.put("positives", 0.408451f);
-        expectedValues.put("negative", 0.492958f);
-        expectedValues.put("zeros", 0.098592f);
-        assertEquals(expectedValues.get("positives"), round(values.get("positives"), 6));
-        assertEquals(expectedValues.get("negative"), round(values.get("negative"), 6));
-        assertEquals(expectedValues.get("zeros"), round(values.get("zeros"), 6));
+        expectedValues.put(POSITIVES, 0.408451f);
+        expectedValues.put(NEGATIVE, 0.492958f);
+        expectedValues.put(ZEROS, 0.098592f);
+        assertEquals(expectedValues.get(POSITIVES), round(values.get(POSITIVES), 6));
+        assertEquals(expectedValues.get(NEGATIVE), round(values.get(NEGATIVE), 6));
+        assertEquals(expectedValues.get(ZEROS), round(values.get(ZEROS), 6));
 
     }
     
@@ -187,12 +191,12 @@ public class Challenge1Test {
                     0, 100, 35, 0, 94, 40, 42, 87, 59, 0,
                 });
         Map<String, Float> expectedValues = new HashMap<>();
-        expectedValues.put("positives", 0.7f);
-        expectedValues.put("negative", 0.0f);
-        expectedValues.put("zeros", 0.3f);
-        assertEquals(expectedValues.get("positives"), round(values.get("positives"), 6));
-        assertEquals(expectedValues.get("negative"), round(values.get("negative"), 6));
-        assertEquals(expectedValues.get("zeros"), round(values.get("zeros"), 6));
+        expectedValues.put(POSITIVES, 0.7f);
+        expectedValues.put(NEGATIVE, 0.0f);
+        expectedValues.put(ZEROS, 0.3f);
+        assertEquals(expectedValues.get(POSITIVES), round(values.get(POSITIVES), 6));
+        assertEquals(expectedValues.get(NEGATIVE), round(values.get(NEGATIVE), 6));
+        assertEquals(expectedValues.get(ZEROS), round(values.get(ZEROS), 6));
         
     }
 

@@ -1,11 +1,19 @@
 package co.fullstacklabs.battlemonsters.challenge.service;
 
+import static java.nio.file.Files.newInputStream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import co.fullstacklabs.battlemonsters.challenge.exceptions.UnprocessableFileException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,15 +38,15 @@ import co.fullstacklabs.battlemonsters.challenge.testbuilders.MonsterTestBuilder
 @ExtendWith(MockitoExtension.class)
 public class MonsterServiceTest {
     @InjectMocks
-    public MonsterServiceImpl monsterService;
+    public transient MonsterServiceImpl monsterService;
 
     @Mock
-    public MonsterRepository monsterRepository;
+    public transient MonsterRepository monsterRepository;
 
     @Mock
-    private ModelMapper mapper;
+    private transient ModelMapper mapper;
 
-   //@Test
+   @Test
    public void testGetAll() {
        String monsterName1 = "Monster 1";
        String monsterName2 = "Monster 2";
@@ -50,7 +58,7 @@ public class MonsterServiceTest {
                .name(monsterName2).attack(30).defense(20).hp(21).speed(15)
                .imageURL("imageUrl1").build();
    
-       List<Monster> monsterList = Arrays.asList(new Monster[]{monster1, monster2});
+       List<Monster> monsterList = Arrays.asList(monster1, monster2);
        Mockito.when(monsterRepository.findAll()).thenReturn(monsterList);
        
        monsterService.getAll();
@@ -61,7 +69,7 @@ public class MonsterServiceTest {
    }
 
     @Test
-    public void testGetMonsterByIdSuccessfully() throws Exception {
+    public void testGetMonsterByIdSuccessfully() {
         int id = 1;
         Monster monster1 = MonsterTestBuilder.builder().build();
         Mockito.when(monsterRepository.findById(id)).thenReturn(Optional.of(monster1));
@@ -71,7 +79,7 @@ public class MonsterServiceTest {
     }
 
     @Test
-    public void testGetMonsterByIdNotExists() throws Exception {
+    public void testGetMonsterByIdNotExists() {
         int id = 1;        
         Mockito.when(monsterRepository.findById(id)).thenReturn(Optional.empty());                
         Assertions.assertThrows(ResourceNotFoundException.class, 
@@ -79,7 +87,7 @@ public class MonsterServiceTest {
     }
 
     @Test
-    public void testDeleteMonsterSuccessfully() throws Exception {
+    public void testDeleteMonsterSuccessfully() {
         int id = 1;
         Monster monster1 = MonsterTestBuilder.builder().build();
         Mockito.when(monsterRepository.findById(id)).thenReturn(Optional.of(monster1));
@@ -93,20 +101,20 @@ public class MonsterServiceTest {
 
      @Test
      void testImportCsvSucessfully() throws Exception {
-         //TOOD: Implement take as a sample data/monstere-correct.csv
-         assertEquals(1, 1);
+         monsterService.importFromInputStream(newInputStream(Paths.get("data/monsters-correct.csv")));
+         Mockito.verify(mapper, Mockito.times(11)).map(any(MonsterDTO.class), any());
      }
      
      @Test
-     void testImportCsvInexistenctColumns() throws Exception {
-         //TOOD: Implement take as a sample data/monsters-wrong-column.csv
-         assertEquals(1, 1);
+     void testImportCsvInexistenctColumns() {
+         Assertions.assertThrows(UnprocessableFileException.class,
+                 () -> monsterService.importFromInputStream(newInputStream(Paths.get("data/monsters-wrong-column.csv"))));
      }
      
      @Test
-     void testImportCsvInexistenctMonster () throws Exception {
-        //TOOD: Implement take as a sample data/monsters-empty-monster.csv
-        assertEquals(1, 1);
+     void testImportCsvInexistenctMonster() {
+         Assertions.assertThrows(UnprocessableFileException.class,
+                 () -> monsterService.importFromInputStream(newInputStream(Paths.get("data/monsters-empty-monster.csv"))));
      } 
 
 }

@@ -1,7 +1,10 @@
 package co.fullstacklabs.battlemonsters.challenge.controller;
 
 import java.io.IOException;
+import java.util.List;
 
+import co.fullstacklabs.battlemonsters.challenge.exceptions.ResourceNotFoundException;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,10 +32,10 @@ import co.fullstacklabs.battlemonsters.challenge.service.MonsterService;
 public class MonsterController {
     
     @Autowired
-    private MonsterService monsterService;
+    private transient MonsterService monsterService;
 
     @GetMapping("/{id}")
-    public MonsterDTO getMonsterById(@PathVariable("id") int monsterId) {
+    public MonsterDTO getMonsterById(@PathVariable("id") int monsterId) throws ResourceNotFoundException {
         return monsterService.findById(monsterId);
     }
 
@@ -41,13 +44,18 @@ public class MonsterController {
         return monsterService.create(monsterDTO);
     }
 
+    @GetMapping
+    public List<MonsterDTO> getAll() {
+        return monsterService.getAll();
+    }
+
     @PutMapping
     public MonsterDTO update(@RequestBody MonsterDTO monsterDTO) {
         return monsterService.update(monsterDTO);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") int monsterId) {
+    public void delete(@PathVariable("id") int monsterId) throws ResourceNotFoundException {
         monsterService.delete(monsterId);
     }
     

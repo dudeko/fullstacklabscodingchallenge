@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  */
 @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
 public class UnprocessableEntityException extends RuntimeException{
+
+    private static final long serialVersionUID = -3467752519437186927L;
+
     public UnprocessableEntityException(String message) {
         super(message);
     }

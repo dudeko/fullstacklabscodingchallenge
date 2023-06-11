@@ -2,6 +2,11 @@ package co.fullstacklabs.battlemonsters.challenge.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.nio.channels.FileChannel;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +22,7 @@ import org.modelmapper.ModelMapper;
 
 import co.fullstacklabs.battlemonsters.challenge.dto.MonsterDTO;
 import co.fullstacklabs.battlemonsters.challenge.exceptions.ResourceNotFoundException;
+import co.fullstacklabs.battlemonsters.challenge.exceptions.UnprocessableFileException;
 import co.fullstacklabs.battlemonsters.challenge.model.Monster;
 import co.fullstacklabs.battlemonsters.challenge.repository.MonsterRepository;
 import co.fullstacklabs.battlemonsters.challenge.service.impl.MonsterServiceImpl;
@@ -30,15 +36,15 @@ import co.fullstacklabs.battlemonsters.challenge.testbuilders.MonsterTestBuilder
 @ExtendWith(MockitoExtension.class)
 public class MonsterServiceTest {
     @InjectMocks
-    public MonsterServiceImpl monsterService;
+    public transient MonsterServiceImpl monsterService;
 
     @Mock
-    public MonsterRepository monsterRepository;
+    public transient MonsterRepository monsterRepository;
 
     @Mock
-    private ModelMapper mapper;
+    private transient ModelMapper mapper;
 
-   //@Test
+   @Test
    public void testGetAll() {
        String monsterName1 = "Monster 1";
        String monsterName2 = "Monster 2";
@@ -92,21 +98,19 @@ public class MonsterServiceTest {
     }
 
      @Test
-     void testImportCsvSucessfully() throws Exception {
-         //TOOD: Implement take as a sample data/monstere-correct.csv
-         assertEquals(1, 1);
+     void testImportCsvSucessfully() {
+         Assertions.assertDoesNotThrow(() -> monsterService.importFromInputStream(Files.newInputStream(Paths.get("data/monsters-correct.csv"))));
      }
      
      @Test
-     void testImportCsvInexistenctColumns() throws Exception {
-         //TOOD: Implement take as a sample data/monsters-wrong-column.csv
-         assertEquals(1, 1);
+     void testImportCsvInexistenctColumns() {
+         Assertions.assertThrows(UnprocessableFileException.class, () -> monsterService.importFromInputStream(Files.newInputStream(Paths.get("data/monsters-wrong-column.csv"))));
+
      }
      
      @Test
-     void testImportCsvInexistenctMonster () throws Exception {
-        //TOOD: Implement take as a sample data/monsters-empty-monster.csv
-        assertEquals(1, 1);
+     void testImportCsvInexistenctMonster () {
+         Assertions.assertThrows(UnprocessableFileException.class, () -> monsterService.importFromInputStream(Files.newInputStream(Paths.get("data/monsters-empty-monster.csv"))));
      } 
 
 }

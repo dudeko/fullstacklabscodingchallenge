@@ -49,6 +49,11 @@ public class Challenge2Test {
         int value = Challenge2.diceFacesCalculator(6, 5, 4);
         assertEquals(6, value);
     }
+    @Test
+    public void testCase100() {
+        int value = Challenge2.diceFacesCalculator(1, 6, 6);
+        assertEquals(12, value);
+    }
 
     @Test
     public void testCase7() {

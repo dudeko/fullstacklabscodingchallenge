@@ -6,5 +6,6 @@ CREATE TABLE "monster" (
     "defense" bigint not null,
     "hp" bigint not null,
     "speed" bigint not null,
-    "image_url" varchar(255) not null     
+    "image_url" varchar(255) not null,
+    "name" varchar(100) not null
 );

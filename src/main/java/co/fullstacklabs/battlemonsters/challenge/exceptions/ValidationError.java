@@ -15,6 +15,10 @@ public class ValidationError {
         return violations;
     }
 
+    public void setViolations(List<ErrorDetails> violations) {
+        this.violations = violations;
+    }
+
     public void addViolations(ErrorDetails violation) {
         this.violations.add(violation);
     }

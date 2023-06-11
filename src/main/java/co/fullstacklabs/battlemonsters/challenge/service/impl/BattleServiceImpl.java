@@ -11,6 +11,7 @@ import co.fullstacklabs.battlemonsters.challenge.dto.BattleDTO;
 import co.fullstacklabs.battlemonsters.challenge.model.Battle;
 import co.fullstacklabs.battlemonsters.challenge.repository.BattleRepository;
 import co.fullstacklabs.battlemonsters.challenge.service.BattleService;
+import co.fullstacklabs.battlemonsters.challenge.service.MonsterService;
 
 /**
  * @author FullStack Labs
@@ -20,14 +21,16 @@ import co.fullstacklabs.battlemonsters.challenge.service.BattleService;
 @Service
 public class BattleServiceImpl implements BattleService {
 
-    private BattleRepository battleRepository;
-    private ModelMapper modelMapper;
+    private transient BattleRepository battleRepository;
+    private transient ModelMapper modelMapper;
+    private transient MonsterService monsterService;
 
    
     @Autowired
-    public BattleServiceImpl(BattleRepository battleRepository, ModelMapper modelMapper) {
+    public BattleServiceImpl(BattleRepository battleRepository, ModelMapper modelMapper, MonsterService monsterService) {
         this.battleRepository = battleRepository;
         this.modelMapper = modelMapper;    
+        this.monsterService = monsterService;
     }
 
     /**
@@ -39,6 +42,26 @@ public class BattleServiceImpl implements BattleService {
         return battles.stream().map(battle -> modelMapper.map(battle, BattleDTO.class))
                 .collect(Collectors.toList());
     }
-   
-    
+
+    @Override
+    public BattleDTO startBattle(BattleDTO battleDTO) {
+        validateMonstersExist(battleDTO);
+        battleDTO.calculateWinner();
+        Battle battle = modelMapper.map(battleDTO, Battle.class);
+        battleRepository.save(battle);
+        return modelMapper.map(battle, BattleDTO.class);
+    }
+
+    @Override
+    public void deleteBattle(int id) {
+        battleRepository.deleteById(id);
+    }
+
+    private void validateMonstersExist(BattleDTO battleDTO) {
+        battleDTO.validateMonstersAreNotNull();
+        battleDTO.setMonsterA(monsterService.findById(battleDTO.getMonsterA().getId()));
+        battleDTO.setMonsterB(monsterService.findById(battleDTO.getMonsterB().getId()));
+    }
+
+
 }

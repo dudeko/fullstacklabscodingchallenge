@@ -1,11 +1,18 @@
 package co.fullstacklabs.battlemonsters.challenge.controller;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.nio.file.Paths.get;
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
@@ -14,7 +21,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -32,15 +41,16 @@ import co.fullstacklabs.battlemonsters.challenge.dto.MonsterDTO;
 @Import(ApplicationConfig.class)
 public class MonsterControllerTest {
     private static final String MONSTER_PATH = "/monster";
+    public static final String ID_PATH_VARIABLE = "/{id}";
 
     @Autowired
-    private MockMvc mockMvc;
+    private transient MockMvc mockMvc;
     @Autowired
-    private ObjectMapper objectMapper;
+    private transient ObjectMapper objectMapper;
 
-    //@Test    
+    @Test
     void shouldFetchAllMonsters() throws Exception {
-        this.mockMvc.perform(get(MONSTER_PATH)).andExpect(status().isOk())
+        this.mockMvc.perform(MockMvcRequestBuilders.get(MONSTER_PATH)).andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id", Is.is(1)))
                 .andExpect(jsonPath("$[0].name", Is.is("Monster 1")))
                 .andExpect(jsonPath("$[0].attack", Is.is(50)))
@@ -53,14 +63,14 @@ public class MonsterControllerTest {
     @Test
     void shouldGetMosterSuccessfully() throws Exception {
         long id = 1l;
-        this.mockMvc.perform(get(MONSTER_PATH + "/{id}", id)).andExpect(status().isOk())
+        this.mockMvc.perform(get(MONSTER_PATH + ID_PATH_VARIABLE, id)).andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", Is.is("Monster 1")));
     }
 
     @Test
     void shoulGetMonsterNotExists() throws Exception {
         long id = 3l;
-        this.mockMvc.perform(get(MONSTER_PATH + "/{id}", id))
+        this.mockMvc.perform(get(MONSTER_PATH + ID_PATH_VARIABLE, id))
                 .andExpect(status().isNotFound());
     }
     
@@ -76,7 +86,7 @@ public class MonsterControllerTest {
                 .content(objectMapper.writeValueAsString(newMonster)));
                 
 
-        this.mockMvc.perform(delete(MONSTER_PATH + "/{id}", id))
+        this.mockMvc.perform(delete(MONSTER_PATH + ID_PATH_VARIABLE, id))
             .andExpect(status().isOk());                
     }
 
@@ -84,25 +94,31 @@ public class MonsterControllerTest {
     void shouldDeleteMonsterNotFound() throws Exception {
         int id = 5;
 
-        this.mockMvc.perform(delete(MONSTER_PATH + "/{id}", id))
+        this.mockMvc.perform(delete(MONSTER_PATH + ID_PATH_VARIABLE, id))
                 .andExpect(status().isNotFound());
     }
     
      @Test
      void testImportCsvSucessfully() throws Exception {
-         //TOOD: Implement take as a sample data/monstere-correct.csv
-         assertEquals(1, 1);
+         this.mockMvc.perform(MockMvcRequestBuilders.multipart(MONSTER_PATH + "/import")
+                         .file("file", Files.readAllBytes(get("data/monsters-correct.csv")))
+                         .characterEncoding(UTF_8))
+                 .andExpect(status().isOk());
      }
      
      @Test
      void testImportCsvInexistenctColumns() throws Exception {
-         //TOOD: Implement take as a sample data/monsters-wrong-column.csv
-         assertEquals(1, 1);
+         this.mockMvc.perform(MockMvcRequestBuilders.multipart(MONSTER_PATH + "/import")
+                         .file("file", Files.readAllBytes(get("data/monsters-wrong-column.csv")))
+                         .characterEncoding(UTF_8))
+                 .andExpect(status().isInternalServerError());
      }
      
      @Test
      void testImportCsvInexistenctMonster () throws Exception {
-        //TOOD: Implement take as a sample data/monsters-empty-monster.csv
-        assertEquals(1, 1);
+         this.mockMvc.perform(MockMvcRequestBuilders.multipart(MONSTER_PATH + "/import")
+                         .file("file", Files.readAllBytes(get("data/monsters-empty-monster.csv")))
+                         .characterEncoding(UTF_8))
+                 .andExpect(status().isInternalServerError());
      } 
 }

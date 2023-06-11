@@ -1,5 +1,6 @@
 package co.fullstacklabs.battlemonsters.challenge.service;
 
+import java.io.Serializable;
 import java.util.List;
 
 import co.fullstacklabs.battlemonsters.challenge.dto.BattleDTO;
@@ -13,5 +14,7 @@ public interface BattleService {
     
     List<BattleDTO> getAll();
 
+    BattleDTO startBattle(BattleDTO battleDTO);
 
+    void deleteBattle(int id);
 }

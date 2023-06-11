@@ -1,6 +1,7 @@
 package co.fullstacklabs.battlemonsters.challenge.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,11 +30,16 @@ import co.fullstacklabs.battlemonsters.challenge.service.MonsterService;
 public class MonsterController {
     
     @Autowired
-    private MonsterService monsterService;
+    private transient MonsterService monsterService;
 
     @GetMapping("/{id}")
     public MonsterDTO getMonsterById(@PathVariable("id") int monsterId) {
         return monsterService.findById(monsterId);
+    }
+
+    @GetMapping
+    public List<MonsterDTO> fetchAllMonsters() {
+        return monsterService.getAll();
     }
 
     @PostMapping
